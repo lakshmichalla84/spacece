@@ -13,3 +13,6 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Enable Apache modules
 RUN a2enmod rewrite
+
+# Start Apache in the foreground
+CMD ["apache2-foreground"]
