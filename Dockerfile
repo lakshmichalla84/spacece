@@ -4,10 +4,12 @@ FROM php:8.1-apache
 # Copy application code to Apache root directory
 COPY . /var/www/html/
 
-# Set permissions if needed
-RUN chown -R www-data:www-data /var/www/html  && chmod -R 755 /var/www/html
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# No EXPOSE directive here
+# Set ServerName to suppress Apache warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Optional: Enable Apache modules (like rewrite)
+# Enable Apache modules
 RUN a2enmod rewrite
