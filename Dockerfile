@@ -1,14 +1,5 @@
 FROM php:8.1-apache
 
-# Install PHP extensions
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
-
-# Enable Apache modules
-RUN a2enmod rewrite
-
-# Set ServerName to suppress Apache warning
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
 # Copy application code to Apache root directory
 COPY . /var/www/html/
 
@@ -16,5 +7,13 @@ COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
+# Set ServerName to suppress Apache warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Enable Apache modules
+RUN a2enmod rewrite
+
 # Start Apache in the foreground
 CMD ["apache2-foreground"]
+
+
