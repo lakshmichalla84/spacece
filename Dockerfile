@@ -1,7 +1,7 @@
 FROM php:8.1-apache
 
 # Update apt and install necessary dependencies
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libmysqlclient-dev
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libmariadb-dev
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
