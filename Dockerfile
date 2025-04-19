@@ -1,7 +1,11 @@
 FROM php:8.1-apache
 
+# Update apt and install necessary dependencies
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libmysqlclient-dev
+
 # Install PHP extensions
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd mysqli && docker-php-ext-enable mysqli
 
 # Enable Apache modules
 RUN a2enmod rewrite
