@@ -1,14 +1,11 @@
 FROM php:8.1-apache
 
-# Install required dependencies and MySQL server
-RUN apt-get update && apt-get install -y \
-    default-mysql-server \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-enable mysqli \
-    && apt-get clean
+# Update apt and install necessary dependencies
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libmariadb-dev
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd mysqli && docker-php-ext-enable mysqli
 
 # Enable Apache modules
 RUN a2enmod rewrite
@@ -23,18 +20,5 @@ COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Add custom MySQL configuration if needed (optional)
-# COPY my.cnf /etc/mysql/my.cnf
-
-# Expose MySQL port if needed (optional)
-EXPOSE 80 3306
-
-# Start both MySQL and Apache using supervisord
-RUN apt-get update && apt-get install -y supervisor
-
-# Add supervisor configuration file
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Default command to run both MySQL and Apache
-CMD ["/usr/bin/supervisord"]
-
+# Start Apache in the foreground
+CMD ["apache2-foreground"]
